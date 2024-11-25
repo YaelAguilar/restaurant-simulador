@@ -1,4 +1,4 @@
-package com.example.restaurantsimulador;
+package com.restaurant.simulador;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

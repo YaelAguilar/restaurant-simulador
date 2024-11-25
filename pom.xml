@@ -76,7 +76,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.example.restaurantsimulador/com.example.restaurantsimulador.HelloApplication
+                                com.example.restaurantsimulador/com.restaurant.simulador.HelloApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

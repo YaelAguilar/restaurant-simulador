@@ -4,6 +4,6 @@ module com.example.restaurantsimulador {
 
     requires com.almasb.fxgl.all;
 
-    opens com.example.restaurantsimulador to javafx.fxml;
-    exports com.example.restaurantsimulador;
+    opens com.restaurant.simulador to javafx.fxml;
+    exports com.restaurant.simulador;
 }
