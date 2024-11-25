@@ -1,4 +1,6 @@
 package com.restaurant.simulador.business.models;
 
-public class EstadoOrden {
+public enum EstadoOrden {
+    EN_PROCESO,
+    LISTO
 }

@@ -1,6 +1,7 @@
-module com.example.restaurantsimulador {
+module com.restaurant.simulador {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.media;
 
     requires com.almasb.fxgl.all;
 
