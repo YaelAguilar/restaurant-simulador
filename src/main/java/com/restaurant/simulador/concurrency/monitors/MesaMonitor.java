@@ -13,7 +13,8 @@ public class MesaMonitor {
     public MesaMonitor(int capacidad) {
         mesas = new ArrayList<>();
         for (int i = 1; i <= capacidad; i++) {
-            mesas.add(new Mesa(i));
+            Mesa mesa = new Mesa(i);
+            mesas.add(mesa);
         }
     }
 
@@ -23,6 +24,7 @@ public class MesaMonitor {
                 if (mesa.getEstado() == EstadoMesa.LIBRE) {
                     mesa.asignarComensal();
                     System.out.println("Mesa " + mesa.getNumero() + " asignada al Comensal " + comensal.getId());
+                    comensal.setMesaAsignada(mesa);
                     return mesa;
                 }
             }
@@ -42,5 +44,9 @@ public class MesaMonitor {
 
     public synchronized int mesasDisponibles() {
         return (int) mesas.stream().filter(mesa -> mesa.getEstado() == EstadoMesa.LIBRE).count();
+    }
+
+    public List<Mesa> getMesas() {
+        return mesas;
     }
 }

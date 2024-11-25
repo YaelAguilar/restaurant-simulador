@@ -1,29 +1,25 @@
 package com.restaurant.simulador.concurrency.monitors;
 
-import com.restaurant.simulador.business.models.Comida;
-
-import java.util.LinkedList;
-import java.util.Queue;
+import com.restaurant.simulador.business.models.Orden;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ComidaMonitor {
-    private final Queue<Comida> bufferComidas;
+    private final Map<Integer, Orden> bufferComidas;
 
     public ComidaMonitor() {
-        bufferComidas = new LinkedList<>();
+        this.bufferComidas = new HashMap<>();
     }
 
-    public synchronized void addComida(Comida comida) {
-        bufferComidas.add(comida);
-        System.out.println("Comida " + comida.getId() + " añadida al buffer de comidas.");
-        notifyAll(); // Notificar a los meseros que hay una comida lista
+    public synchronized void agregarComida(Orden orden) {
+        bufferComidas.put(orden.getId(), orden);
+        notifyAll();
     }
 
-    public synchronized Comida getComida() throws InterruptedException {
-        while (bufferComidas.isEmpty()) {
-            wait(); // Esperar hasta que haya una comida disponible
+    public synchronized Orden obtenerComida(int ordenId) throws InterruptedException {
+        while (!bufferComidas.containsKey(ordenId)) {
+            wait();
         }
-        Comida comida = bufferComidas.poll();
-        System.out.println("Comida " + comida.getId() + " retirada del buffer de comidas.");
-        return comida;
+        return bufferComidas.remove(ordenId);
     }
 }

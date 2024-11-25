@@ -9,21 +9,18 @@ public class OrdenMonitor {
     private final Queue<Orden> bufferOrdenes;
 
     public OrdenMonitor() {
-        bufferOrdenes = new LinkedList<>();
+        this.bufferOrdenes = new LinkedList<>();
     }
 
-    public synchronized void addOrden(Orden orden) {
+    public synchronized void agregarOrden(Orden orden) {
         bufferOrdenes.add(orden);
-        System.out.println("Orden " + orden.getId() + " añadida al buffer de órdenes.");
-        notifyAll(); // Notificar a los cocineros que hay una nueva orden
+        notifyAll();
     }
 
-    public synchronized Orden getOrden() throws InterruptedException {
+    public synchronized Orden retirarOrden() throws InterruptedException {
         while (bufferOrdenes.isEmpty()) {
-            wait(); // Esperar hasta que haya una orden disponible
+            wait();
         }
-        Orden orden = bufferOrdenes.poll();
-        System.out.println("Orden " + orden.getId() + " retirada del buffer de órdenes.");
-        return orden;
+        return bufferOrdenes.poll();
     }
 }

@@ -3,6 +3,8 @@ package com.restaurant.simulador.business.models;
 public class Mesa {
     private final int numero;
     private EstadoMesa estado;
+    private double posX;
+    private double posY;
 
     public Mesa(int numero) {
         this.numero = numero;
@@ -23,5 +25,18 @@ public class Mesa {
 
     public synchronized void liberarMesa() {
         this.estado = EstadoMesa.LIBRE;
+    }
+
+    public void setPosicion(double x, double y) {
+        this.posX = x;
+        this.posY = y;
+    }
+
+    public double getPosX() {
+        return posX;
+    }
+
+    public double getPosY() {
+        return posY;
     }
 }

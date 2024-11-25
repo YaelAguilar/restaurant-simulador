@@ -4,7 +4,6 @@ import com.restaurant.simulador.business.actors.Cocinero;
 import com.restaurant.simulador.business.actors.Comensal;
 import com.restaurant.simulador.business.actors.Mesero;
 import com.restaurant.simulador.business.actors.Recepcionista;
-import com.restaurant.simulador.business.models.Mesa;
 import com.restaurant.simulador.concurrency.monitors.ComidaMonitor;
 import com.restaurant.simulador.concurrency.monitors.ComensalMonitor;
 import com.restaurant.simulador.concurrency.monitors.MesaMonitor;
@@ -32,7 +31,7 @@ public class RestauranteService {
     private int totalComensales = 0;
     private int ordenesProcesadas = 0;
 
-    public RestauranteService(int capacidad, int cantidadMeseros, int cantidadCocineros, RestauranteView view) {
+    public RestauranteService(int capacidad, int cantidadMeseros, int cantidadCocineros) {
         this.mesaMonitor = new MesaMonitor(capacidad);
         this.ordenMonitor = new OrdenMonitor();
         this.comidaMonitor = new ComidaMonitor();
@@ -41,7 +40,7 @@ public class RestauranteService {
         this.meseros = new ArrayList<>();
         this.cocineros = new ArrayList<>();
         this.threads = new ArrayList<>();
-        this.view = view;
+        this.view = new RestauranteView(mesaMonitor.getMesas());
         this.running = false;
 
         for (int i = 1; i <= cantidadMeseros; i++) {
@@ -58,6 +57,19 @@ public class RestauranteService {
             throw new IllegalStateException("La vista no ha sido inicializada correctamente");
         }
         running = true;
+
+        // Establecer el número total de cocineros en la vista
+        view.setTotalCocineros(cocineros.size());
+
+        // Añadir representaciones gráficas de meseros y cocineros
+        for (Mesero mesero : meseros) {
+            view.añadirMesero(mesero.getId());
+        }
+
+        for (Cocinero cocinero : cocineros) {
+            view.añadirCocinero(cocinero.getId());
+        }
+
         // Iniciar hilos de meseros
         for (Mesero mesero : meseros) {
             MeseroThread meseroThread = new MeseroThread(mesero, ordenMonitor, comidaMonitor, comensalMonitor, view, this);
@@ -107,9 +119,13 @@ public class RestauranteService {
         System.out.println("Simulación finalizada.");
     }
 
-    // Metodo para incrementar las órdenes procesadas desde CocineroThread
+    // Método para incrementar las órdenes procesadas desde CocineroThread
     public synchronized void incrementarOrdenesProcesadas() {
         ordenesProcesadas++;
         view.actualizarOrdenesProcesadas(ordenesProcesadas);
+    }
+
+    public RestauranteView getView() {
+        return view;
     }
 }
