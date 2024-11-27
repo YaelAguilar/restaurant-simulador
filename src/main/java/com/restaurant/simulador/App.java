@@ -2,48 +2,34 @@ package com.restaurant.simulador;
 
 import com.restaurant.simulador.business.services.RestauranteService;
 import com.restaurant.simulador.presentation.views.RestauranteView;
-import com.almasb.fxgl.app.GameApplication;
-import com.almasb.fxgl.app.GameSettings;
-import static com.almasb.fxgl.dsl.FXGL.*;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class App extends GameApplication {
-
-    private RestauranteService restauranteService;
-    private RestauranteView restauranteView;
+public class App extends Application {
 
     @Override
-    protected void initSettings(GameSettings settings) {
-        settings.setTitle("Simulador de Restaurante");
-        settings.setWidth(1000);
-        settings.setHeight(600);
-        settings.setVersion("1.0");
-        settings.setMainMenuEnabled(false);
-    }
+    public void start(Stage primaryStage) {
+        // Crear instancia de RestauranteService
+        int capacidadMesas = 40; // Ajusta según necesidad
+        int cantidadMeseros = 4; // Ajusta según necesidad
+        int cantidadCocineros = 6; // Ajusta según necesidad
 
-    @Override
-    protected void initGame() {
-        // Primero inicializamos la vista
-        restauranteView = new RestauranteView();
-        addUINode(restauranteView.getRoot());
+        // Inicializar RestauranteService
+        RestauranteService restauranteService = new RestauranteService(capacidadMesas, cantidadMeseros, cantidadCocineros);
 
-        // Luego inicializamos el servicio con la vista ya creada
-        int capacidad = 10;
-        int cantidadMeseros = (int) Math.ceil(capacidad * 0.10);
-        int cantidadCocineros = (int) Math.ceil(capacidad * 0.15);
+        // Obtener la vista desde RestauranteService
+        RestauranteView view = restauranteService.getView();
 
-        restauranteService = new RestauranteService(capacidad, cantidadMeseros, cantidadCocineros, restauranteView);
+        // Configurar la escena con la vista
+        Scene scene = new Scene(view.getRoot());
+
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Simulador de Restaurante");
+        primaryStage.show();
+
+        // Iniciar la simulación
         restauranteService.iniciarSimulacion();
-    }
-
-    @Override
-    protected void onUpdate(double tpf) {
-        // Implementación de actualizaciones periódicas si es necesario
-    }
-
-    public void cleanup() {
-        if (restauranteService != null) {
-            restauranteService.finalizarSimulacion();
-        }
     }
 
     public static void main(String[] args) {
